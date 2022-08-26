@@ -147,20 +147,10 @@ set(BUILD_ARCH "unknown")
 if (CMAKE_GENERATOR_PLATFORM)
     set(BUILD_ARCH "${CMAKE_GENERATOR_PLATFORM}")
 endif()
-if(arch_lower MATCHES "arm64" OR arch_lower MATCHES "aarch64" OR ${CMAKE_GENERATOR} MATCHES "(ARM64)" OR ${BUILD_ARCH} MATCHES "(ARM64)")
-    set(DEPENDENCIES "dependencies-win-aarch64")
-elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(DEPENDENCIES "dependencies-win-x86_64")
-else()
-    set(DEPENDENCIES "dependencies-win-i686")
-endif()
 
 if(WIN32)
     ADD_DEFINITIONS(-DUNICODE)
     ADD_DEFINITIONS(-D_UNICODE)
-    if(NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/${DEPENDENCIES}")
-        message(FATAL_ERROR "Dependencies directory not found, make sure dependencies-win-(arch) exists inside stk-code directory.")
-    endif()
 endif()
 
 # These variables enable MSVC to find libraries located in "dependencies"
@@ -822,10 +812,6 @@ endif()
 
 if(MSVC OR MINGW)
   target_link_libraries(supertuxkart iphlpapi.lib)
-  add_custom_command(TARGET supertuxkart POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${PROJECT_SOURCE_DIR}/${DEPENDENCIES}/bin"
-        $<TARGET_FILE_DIR:supertuxkart>)
   add_custom_target(stkshaders SOURCES ${STK_SHADERS})
 endif()
 
@@ -893,9 +879,9 @@ endif()
 
 # ==== Install target ====
 install(TARGETS supertuxkart RUNTIME DESTINATION ${STK_INSTALL_BINARY_DIR} BUNDLE DESTINATION .)
-install(DIRECTORY ${STK_DATA_DIR} DESTINATION ${STK_INSTALL_DATA_DIR} PATTERN ".svn" EXCLUDE PATTERN ".git" EXCLUDE)
+install(DIRECTORY ${STK_DATA_DIR} DESTINATION ${CMAKE_INSTALL_PREFIX} PATTERN ".svn" EXCLUDE PATTERN ".git" EXCLUDE)
 if(STK_ASSETS_DIR AND CHECK_ASSETS)
-  install(DIRECTORY ${STK_ASSETS_DIR} DESTINATION ${STK_INSTALL_DATA_DIR}/data PATTERN ".svn" EXCLUDE PATTERN ".git" EXCLUDE)
+  install(DIRECTORY ${STK_ASSETS_DIR} DESTINATION ${CMAKE_INSTALL_PREFIX}/data PATTERN ".svn" EXCLUDE PATTERN ".git" EXCLUDE)
 endif()
 install(FILES ${STK_DATA_DIR}/supertuxkart.desktop DESTINATION share/applications)
 install(FILES data/supertuxkart_16.png DESTINATION share/icons/hicolor/16x16/apps RENAME supertuxkart.png)

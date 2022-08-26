@@ -1,4 +1,25 @@
-# SuperTuxKart
+# SuperTuxKart - for Windows on ARM32
+
+SuperTuxKart is a free kart racing game. It focuses on fun and not on realistic kart physics. Instructions can be found on the in-game help page.
+
+The SuperTuxKart homepage can be found at <https://supertuxkart.net/>. There is also our [FAQ](https://supertuxkart.net/FAQ) and information on how get in touch with the [community](https://supertuxkart.net/Community).
+
+Latest release binaries can be found [here](https://download.pahaze.net/ARM/).
+
+## Building
+Building for Windows on ARM32 is very straightforward. Build all needed dependencies with MXE, then clone the 2 projects (stk-assets, stk-code) as normal. In stk-code, run a general CMake setup:
+
+```sh
+mkdir build
+cd build
+armv7-w64-mingw32-cmake -DUSE_DIRECTX=ON -DSPIRV_TOOLS_BUILD_STATIC=OFF ..
+```
+
+Then from there, build as normal and install! The data dir was set to move to where it should be by default for Windows.
+
+# Original README
+
+## SuperTuxKart
 [![Linux build status](https://github.com/supertuxkart/stk-code/actions/workflows/linux.yml/badge.svg)](https://github.com/supertuxkart/stk-code/actions/workflows/linux.yml)
 [![Apple build status](https://github.com/supertuxkart/stk-code/actions/workflows/apple.yml/badge.svg)](https://github.com/supertuxkart/stk-code/actions/workflows/apple.yml)
 [![Windows build status](https://github.com/supertuxkart/stk-code/actions/workflows/windows.yml/badge.svg)](https://github.com/supertuxkart/stk-code/actions/workflows/windows.yml)
